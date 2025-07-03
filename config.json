@@ -1,0 +1,15 @@
+{
+  "stream_url": 0,
+  "port": 8000,
+  "skip_frames": 1,
+  "fps": 10,
+  "line_ratio": 0.5,
+  "v_thresh": 20,
+  "debounce": 1.0,
+  "retry_interval": 5,
+  "model_path": "yolov8n.pt",
+  "max_capacity": 100,
+  "warn_threshold": 80,
+  "redis_url": "redis://localhost:6379/0",
+  "default_workers": -1
+}

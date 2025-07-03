@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Crowd Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #status { font-size: 1.5em; margin-bottom: 1em; }
+        #status.green { color: green; }
+        #status.yellow { color: orange; }
+        #status.red { color: red; }
+        .counts { margin-top: 1em; }
+        img { max-width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+<h1>Crowd Management Dashboard</h1>
+<div id="status" class="green">Loading...</div>
+<div class="counts">
+    <p>Entering: <span id="in">0</span></p>
+    <p>Exiting: <span id="out">0</span></p>
+    <p>Max Capacity: {{ MAX_CAPACITY }}</p>
+</div>
+<img id="video" src="/video_feed" alt="video feed">
+<script>
+const ws = new WebSocket(`ws://${location.host}/ws/stats`);
+ws.onmessage = (e) => {
+    const data = JSON.parse(e.data);
+    document.getElementById('in').textContent = data.in_count;
+    document.getElementById('out').textContent = data.out_count;
+    const status = document.getElementById('status');
+    status.textContent = data.status.toUpperCase();
+    status.className = data.status;
+};
+</script>
+</body>
+</html>
