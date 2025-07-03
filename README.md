@@ -1,9 +1,8 @@
 # Crowd Management Project
 
-This repository provides a simple people counting system using **YOLOv8**,
-**Deep SORT** tracking and **FastAPI**. The application exposes a dashboard that
-shows live counts of people entering and exiting a region from a video stream.
-Redis is used to persist counts between restarts.
+This repository provides a simple people counting system using **YOLOv8**, **Deep SORT** tracking and **FastAPI**. The application exposes a dashboard that shows live counts of people entering and exiting a region from a video stream. Redis is used to persist counts between restarts.
+
+The dashboard is built with [Bootstrap 5](https://getbootstrap.com/) and presents a responsive layout with a progress bar indicating current occupancy.
 
 ## Features
 
@@ -21,8 +20,7 @@ Install dependencies with pip:
 pip install -r requirements.txt
 ```
 
-You also need a running Redis instance. The default configuration assumes it is
-available on `localhost:6379`.
+You also need a running Redis instance. The default configuration assumes it is available on `localhost:6379`.
 
 ## Running
 
@@ -32,22 +30,17 @@ Start the application using:
 python server.py
 ```
 
-By default it binds to `http://0.0.0.0:8000`. Visit this address in your browser
-to see the dashboard.
+By default it binds to `http://0.0.0.0:8000`. Visit this address in your browser to see the dashboard.
 
-The video source defaults to the first webcam (`0`). You can provide another
-source as a command‑line argument (e.g. an RTSP URL):
+The video source defaults to the first webcam (`0`). You can provide another source as a command‑line argument (e.g. an RTSP URL):
 
 ```bash
 python server.py rtsp://example.com/stream
 ```
 
-Settings such as maximum capacity can be adjusted from the `/settings` page of
-the web interface.
+Settings such as maximum capacity can be adjusted from the `/settings` page of the web interface.
 
 ## Configuration
 
-The `config.json` file contains all tunable parameters such as detection model,
-line position and frame rate. Modify this file or use the settings page to adapt
-the system to your environment.
+The `config.json` file contains all tunable parameters such as detection model, line position and frame rate. Modify this file or use the settings page to adapt the system to your environment.
 

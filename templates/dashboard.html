@@ -3,35 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <title>Crowd Dashboard</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        #status { font-size: 1.5em; margin-bottom: 1em; }
-        #status.green { color: green; }
-        #status.yellow { color: orange; }
-        #status.red { color: red; }
-        .counts { margin-top: 1em; }
-        img { max-width: 100%; height: auto; }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Crowd Management Dashboard</h1>
-<div id="status" class="green">Loading...</div>
-<div class="counts">
-    <p>Entering: <span id="in">0</span></p>
-    <p>Exiting: <span id="out">0</span></p>
-    <p>Max Capacity: {{ MAX_CAPACITY }}</p>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <span class="navbar-brand mb-0 h1">Crowd Management</span>
+    <a class="btn btn-outline-light" href="/settings">Settings</a>
+  </div>
+</nav>
+<div class="container-fluid my-4">
+  <div class="row">
+    <div class="col-md-8 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body p-2">
+          <img id="video" class="img-fluid" src="/video_feed" alt="video feed">
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card mb-3 shadow-sm text-center">
+        <div class="card-body">
+          <h5 class="card-title">Status</h5>
+          <div id="status" class="fs-2 fw-bold text-success">Loading...</div>
+        </div>
+      </div>
+      <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+          <p class="mb-1">Occupancy</p>
+          <div class="progress mb-2" style="height: 25px;">
+            <div id="occupancyBar" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+          </div>
+          <div class="text-center">
+            <span id="occ">0</span> / {{ MAX_CAPACITY }}
+          </div>
+        </div>
+      </div>
+      <div class="card shadow-sm text-center">
+        <div class="card-body">
+          <p>Entering: <span id="in">0</span></p>
+          <p>Exiting: <span id="out">0</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<img id="video" src="/video_feed" alt="video feed">
 <script>
+const MAX_CAP = {{ MAX_CAPACITY }};
 const ws = new WebSocket(`ws://${location.host}/ws/stats`);
 ws.onmessage = (e) => {
     const data = JSON.parse(e.data);
+    const statusEl = document.getElementById('status');
+    const bar = document.getElementById('occupancyBar');
+    const occ = Math.max(data.in_count - data.out_count, 0);
     document.getElementById('in').textContent = data.in_count;
     document.getElementById('out').textContent = data.out_count;
-    const status = document.getElementById('status');
-    status.textContent = data.status.toUpperCase();
-    status.className = data.status;
+    document.getElementById('occ').textContent = occ;
+    const percent = Math.min(100, occ * 100 / MAX_CAP);
+    bar.style.width = `${percent}%`;
+    statusEl.textContent = data.status.toUpperCase();
+    statusEl.classList.remove('text-success','text-warning','text-danger');
+    bar.classList.remove('bg-success','bg-warning','bg-danger');
+    if (data.status === 'green') {
+        statusEl.classList.add('text-success');
+        bar.classList.add('bg-success');
+    } else if (data.status === 'yellow') {
+        statusEl.classList.add('text-warning');
+        bar.classList.add('bg-warning');
+    } else {
+        statusEl.classList.add('text-danger');
+        bar.classList.add('bg-danger');
+    }
 };
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
