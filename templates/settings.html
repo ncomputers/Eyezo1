@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Settings</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        form { width: 300px; }
+        label { display: block; margin-top: 1em; }
+        input[type=number] { width: 100%; }
+        .saved { color: green; }
+    </style>
+</head>
+<body>
+<h1>Settings</h1>
+{% if saved %}<p class="saved">Settings saved!</p>{% endif %}
+<form action="/settings" method="post">
+    <label>Max Capacity:
+        <input type="number" name="max_capacity" value="{{ cfg.max_capacity }}" min="1" required>
+    </label>
+    <label>Warning Threshold (%):
+        <input type="number" name="warn_threshold" value="{{ cfg.warn_threshold }}" min="0" max="100" required>
+    </label>
+    <button type="submit">Save</button>
+</form>
+</body>
+</html>
